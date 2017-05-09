@@ -6,6 +6,7 @@ using namespace std;
 const int TLBsize = 16;
 const int PageTableSize = 256;
 const int frameSize = 256;
+int pageFaultcount = 0;
 
 int main()
 {
@@ -30,20 +31,19 @@ int main()
 			//generate physical address
 		}
 		else	//page does not exist in TLB miss
-		{
+		{	
 			//check page table for page number
 			bool pageSearchResult = searchFunc(/*page number*/);
 			
 			if(pageSearchResult == true)	//page number is in page table
 			{
-					//update TLB
+					//use FIFO function to update tlb
+				
 					//generate physical address
 			}
 			else	//page number is not in page table
 			{
-				//read page from disk
-				
-				//activate I/O hardware
+				pageFaultcount++;	//page fault occured
 				
 				//transfer page to memory from disk
 				
