@@ -8,9 +8,9 @@ using namespace std;
 
 class VM {
 private:
-	static const int TLBsize;// = 16;
-	static const int PageTableSize;// = 256;
-	static const int frameSize;// = 256;
+	static const int TLBsize = 16;
+	static const int PageTableSize = 256;
+	static const int frameSize = 256;
 /*
 	int TLBtable[TLBsize];
 	int PageTable[PageTableSize];
@@ -21,6 +21,9 @@ private:
 	int frameTable[256];	//physical memory
 	int pageFaultcount = 0;
 
+	int tlbIndex=0;
+    int pageTableIndex=0;
+
 public:
 	VM(); //constructor
 	~VM(); //destructor
@@ -29,7 +32,8 @@ public:
 
 	int central(string); //heart of the function. This is where the mega loop is
 
-
+    int tlbSearch(int); //Andrew's thing
+    void updateTLBVM(int, int, int);//
 
 protected:
 	//nothing?
@@ -93,7 +97,7 @@ int VM::central(string fileName)
 
 		//check TLB for page number
 		//tlbSearch(int& tlbArray[][],int& pageTable[][],int toFind)
-		bool searchResult = searchFunc(/*page number*/);
+		bool searchResult = tlbSearch(page);
 
 		if(searchResult == true)	//hit
 		{
@@ -102,7 +106,7 @@ int VM::central(string fileName)
 		else	//page does not exist in TLB miss
 		{
 		//check page table for page number
-			bool pageSearchResult = searchFunc(/*page number*/);
+			bool pageSearchResult = tlbSearch(page);
 
 			if(pageSearchResult == true)	//page number is in page table
 			{
@@ -131,3 +135,66 @@ int VM::central(string fileName)
 	}
 
 }
+
+
+
+int VM::tlbSearch(int toFind)//int& tlbArray[][],int& pageTable[][],int toFind)
+{
+	int found= -1;
+	for(int i=0;i<sizeof(tlbArray)-1;i++)
+	{
+		if(tlbArray[i][0]==toFind)
+		{
+			found=1;
+		}
+	}
+	if(found==-1)
+	{
+		for(int i=0;i<sizeof(pageTable)-1;i++)
+		{
+			if(pageTable[i][0]==toFind)
+			{
+				found=0;
+			}
+		}
+	}
+	if(found==-1)
+	{
+		pageFaultCount++;
+	}
+	return found;
+}
+
+void VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pageTable[][],int page,int frame,int status)
+{
+	if(status==-1)
+	{
+		pageTable[pageTableIndex][0]=page;
+		pageTable[pageTableIndex][1]=frame;
+		pageTableIndex++;
+		tlbArray[tlbIndex][0]=page;
+		tlbArray[tlbIndex][1]=frame;
+		tlbArrayIndex++;
+	}
+	else if(status==0)
+	{
+		tlbArray[tlbIndex][0]=page;
+		tlbArray[tlbIndex][1]=frame;
+		tlbIndex++;
+	}
+	else
+	{
+		printf("\nTLB HIT NO UPDATE\n");
+	}
+	if(tlbIndex==sizeof(tlbArray)-1)
+	{
+		tlbIndex=0;
+	}
+	if(pageTableIndex==sizeof(pageTable)-1)
+	{
+		pageTableIndex=0;
+	}
+}
+
+
+
