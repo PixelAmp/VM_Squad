@@ -5,7 +5,36 @@
 using namespace std;
 
 
-int toInt(string bin) //turns passed string into a number
+
+class VM {
+private:
+	const int TLBsize = 16;
+	const int PageTableSize = 256;
+	const int frameSize = 256;
+	
+	int TLBtable[TLBsize];
+	int PageTable[PageTableSize];
+	int frameTable[frameSize];	//physical memory
+	int pageFaultcount = 0;
+	
+public:
+	VM(); //constructor
+	~VM(); //destructor
+	int toInt(string);
+	string toBinary(int);
+	
+	
+	
+protected:
+	//nothing?
+};
+
+VM::VM() ;constructor
+{
+		
+}
+
+int VM::toInt(string bin) //turns passed string into a number
 {
     int spot = 0, num = 0;
     for(int i = (bin.size()-1); i >= 0; i--){
@@ -17,7 +46,7 @@ int toInt(string bin) //turns passed string into a number
     return num;
 }
 
-string toBinary(int n) //turns passed integer into a 32 bit binary string
+string VM::toBinary(int n) //turns passed integer into a 32 bit binary string
 {
     string r;
     while(n!=0) {r=(n%2==0 ?"0":"1")+r; n/=2;}
@@ -27,17 +56,8 @@ string toBinary(int n) //turns passed integer into a 32 bit binary string
 }
 
 
-//Global Variables
-const int TLBsize = 16;
-const int PageTableSize = 256;
-const int frameSize = 256;
-int pageFaultcount = 0;
-
-int main()
+int main(int argc, char *argv[])
 {
-	int TLBtable[TLBsize];
-	int PageTable[PageTableSize];
-	int frameTable[frameSize];		//physical memory
 	int page = 0, offset = 0; //holds page number and offset
 	string binary;
 	ifstream address, data;
