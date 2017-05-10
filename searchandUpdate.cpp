@@ -1,5 +1,11 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
 int tlbIndex=0;
 int pageTableIndex=0;
+
 int tlbSearch(int& tlbArray[][],int& pageTable[][],int toFind)
 {
 	int found=-1;
@@ -24,7 +30,7 @@ int tlbSearch(int& tlbArray[][],int& pageTable[][],int toFind)
 	{
 		pageFaultCount++;
 	}
-	return found;	
+	return found;
 }
 
 void updateTLBVM(int& tlbArray[][],int& pageTable[][],int page,int frame,int status)
