@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include<string>
+#include <string>
+#include "searchandUpdate.cpp"
 using namespace std;
 
 
@@ -43,37 +44,30 @@ int main()
     	string fileName;
 	
 	
-	if(argc != 2)
-        {
+	if(argc != 2) { //checks to make sure there is the correct amount of arguments
             cout << "Incorrect Number of Arguments.\n" << endl;
-            return 1;
-        }
+            return 1; }
 
 	fileName = argv[1]; //gets the file name
 
-
 	address.open(fileName.data()); //opens file
 
-   	 if (address == NULL) //checks to make sure file exists
-   	 {
+   	 if (address == NULL){ //checks to make sure file exists
      	   cout << "file does not exist" << endl;
-     	   return 1;
-   	 }
+     	   return 1;}
 
 
 	while(!data.eof())	//while there are addresses to read
 	{
-	    address >> page; //reads in a number from the file; reuse since we're throwing away this value anyway
+	    	address >> page; //reads in a number from the file; reuse since we're throwing away this value anyway
 
 		binary = toBinary(input); //makes input a 32 bit number
 
 		page = toInt(binary.substr(16,8)); //makes 15-8 to an int for the page
 		offset = toInt(binary.substr(24,8)); // makes 7-0 to an int for the offset
 
-
-
-
 		//check TLB for page number
+		//tlbSearch(int& tlbArray[][],int& pageTable[][],int toFind)
 		bool searchResult = searchFunc(/*page number*/);
 		
 		if(searchResult == true)	//hit
