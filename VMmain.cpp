@@ -121,7 +121,7 @@ int VM::central(string fileName)
 			int physAddress = /*equation here*/;
 
 			//write physical address to file
-			Out >> input  >> " " >> physAddress >> endl;
+			Out >> input  >> "\t" >> physAddress >> endl;
 		}
 		else if(searchResult == 0)	//found in page table, TLB miss
 		{
@@ -130,16 +130,19 @@ int VM::central(string fileName)
 			//generate physical address
 
 			//write physical address to file
+			Out >> input  >> "\t" >> physAddress >> endl;
 		}
 		else	//page fault
 		{
 			//store requested page in physical mem
 
 			//update page table and TLB
-
+			updateTLBVM(page, offset, searchResult);
+			
 			//generate physical address
 
 			//write physical address to file
+			Out >> input  >> " " >> physAddress >> endl;
 		}
 	}
 	
