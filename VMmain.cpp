@@ -189,7 +189,8 @@ int VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pag
 	if(tlbIndex==sizeof(TLBtable)-1)
 	{
 		tlbIndex=0;
-}
+	}
+	return -1;
 }
 
 
