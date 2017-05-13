@@ -147,7 +147,7 @@ int VM::tlbSearch(int toFind)//int& tlbArray[][],int& pageTable[][],int toFind)
 	{
 		for(int i=0;i<sizeof(PageTable)-1;i++)
 		{
-			if(PageTable[i][0]==toFind) //search through page table
+			if(PageTable[i][0] == toFind) //search through page table
 			{
 				found=0;
 			}
