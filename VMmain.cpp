@@ -142,7 +142,7 @@ int VM::central(string fileName)
 			//generate physical address
 
 			//write physical address to file
-			Out >> input  >> " " >> physAddress >> endl;
+			Out >> input  >> "\t" >> physAddress >> endl;
 		}
 	}
 	
