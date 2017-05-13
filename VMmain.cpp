@@ -119,18 +119,12 @@ int VM::central(string fileName)
 		if(searchResult == 1)	//found in TLB, hit
 		{
 			int physAddress = /*equation here*/;
-
-			//write physical address to file
-			Out >> input  >> "\t" >> physAddress >> endl;
 		}
 		else if(searchResult == 0)	//found in page table, TLB miss
 		{
 			updateTLBVM(page, offset, searchResult);
 
 			//generate physical address
-
-			//write physical address to file
-			Out >> input  >> "\t" >> physAddress >> endl;
 		}
 		else	//page fault
 		{
@@ -140,10 +134,8 @@ int VM::central(string fileName)
 			updateTLBVM(page, offset, searchResult);
 			
 			//generate physical address
-
-			//write physical address to file
-			Out >> input  >> "\t" >> physAddress >> endl;
 		}
+		Out >> input  >> "\t" >> physAddress >> endl;
 	}
 	
 	//closes stream files
