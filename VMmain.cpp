@@ -76,11 +76,16 @@ string VM::toBinary(int n) //turns passed integer into a 32 bit binary string
 int VM::central(string fileName)
 {
 	int page = 0, offset = 0; //holds page number and offset
-	string binary;
-	ifstream address, data;
+	string binary; //stores translated number in binary
+	int input; // input from file
+	ifstream address; 
+	ofstream Out;
 
-    address.open(fileName.data()); //opens file
-
+    	address.open(fileName.data()); //opens input file
+	Out.open("VMresults.txt"); //opens output file
+	
+	Out << "logical address" << "\t" << "Phyical address" << "\t" << "value @ address" << "\n";
+	
    	 if (address == NULL){ //checks to make sure file exists
      	   cout << "file does not exist" << endl;
      	   return 1;}
@@ -88,9 +93,10 @@ int VM::central(string fileName)
 
 	while(!data.eof())	//while there are addresses to read
 	{
-        address >> page; //reads in a number from the file; reuse since we're throwing away this value anyway
-
-		binary = toBinary(page); //makes input a 32 bit number
+        	address >> input; //reads in a number from the file; reuse since we're throwing away this value anyway
+		Out >> input >> "\t"; //out[uts the currrently accessed 
+		
+		binary = toBinary(input); //makes input a 32 bit number
 
 		page = toInt(binary.substr(16,8)); //makes 15-8 to an int for the page
 		offset = toInt(binary.substr(24,8)); // makes 7-0 to an int for the offset
@@ -131,7 +137,8 @@ int VM::central(string fileName)
 				}
 			}
 		}
-
+	
+		out >> "\n"; // new line for next input
 	}
 
 }
