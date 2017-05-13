@@ -33,7 +33,6 @@ private:
 	int tlbIndex=0;
     	int pageTableIndex=0;
 	int input, page, offset;
-	int physAddress;
 
 public:
 	VM(); //constructor
@@ -118,24 +117,13 @@ int VM::central(string fileName)
 
 		if(searchResult == 1)	//found in TLB, hit
 		{
-			physAddress = /*equation here*/;
+			//nothing happened...
 		}
-		else if(searchResult == 0)	//found in page table, TLB miss
+		else //page fault or TLB miss
 		{
 			updateTLBVM(page, offset, searchResult);
-
-			//generate physical address
 		}
-		else	//page fault
-		{
-			//store requested page in physical mem
-
-			//update page table and TLB
-			updateTLBVM(page, offset, searchResult);
-			
-			//generate physical address
-		}
-		Out >> input  >> "\t" >> physAddress >> endl;
+		Out >> input >> "\t" >> offset >> endl;
 	}
 	
 	//closes stream files
