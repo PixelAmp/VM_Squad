@@ -32,6 +32,8 @@ private:
 
 	int tlbIndex=0;
     	int pageTableIndex=0;
+	int input, page, offset;
+	int physAddress;
 
 public:
 	VM(); //constructor
@@ -84,9 +86,7 @@ string VM::toBinary(int n) //turns passed integer into a 32 bit binary string
 
 int VM::central(string fileName)
 {
-	int page = 0, offset = 0; //holds page number and offset
-	string binary;
-	int input;	
+	string binary;	
 	ifstream address;
 	ofstream Out;
 
@@ -118,7 +118,7 @@ int VM::central(string fileName)
 
 		if(searchResult == 1)	//found in TLB, hit
 		{
-			int physAddress = /*equation here*/;
+			physAddress = /*equation here*/;
 		}
 		else if(searchResult == 0)	//found in page table, TLB miss
 		{
