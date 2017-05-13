@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <math.h>
-//#include "searchandUpdate.cpp"
 using namespace std;
 
 
@@ -84,7 +83,7 @@ int VM::central(string fileName)
     	address.open(fileName.data()); //opens input file
 	Out.open("VMresults.txt"); //opens output file
 	
-	Out << "logical address" << "\t" << "Phyical address" << "\t" << "value @ address" << "\n";
+	Out << "Logical address" << "\t" << "Physical address" << "\n";
 	
    	 if (address == NULL){ //checks to make sure file exists
      	   cout << "file does not exist" << endl;
