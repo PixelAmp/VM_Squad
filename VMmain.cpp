@@ -88,11 +88,11 @@ int VM::central(string fileName)
 	string binary;	
 	ifstream address;
 	ofstream Out;
-
+	string found;
     	address.open(fileName.data()); //opens file
 	Out.open("VMresults.txt");
 
-	Out << "Logical address" << "\t" << "Physical Address" << "/n";
+	Out << "Logical address" << "\t" << "Physical Address" "\t" << "searchResult" << "/n";
 
 
    	if (address == NULL){ //checks to make sure file exists
@@ -118,12 +118,15 @@ int VM::central(string fileName)
 		if(searchResult == 1)	//found in TLB, hit
 		{
 			//nothing happened...
+			found = "found";
 		}
 		else //page fault or TLB miss
 		{
 			updateTLBVM(page, offset, searchResult);
+			found = "not found";
 		}
-		Out >> input >> "\t" >> offset >> endl;
+		
+		Out >> input >> "\t" >> offset >> "\t" << found << "\n";
 	}
 	
 	//closes stream files
@@ -147,7 +150,7 @@ int VM::tlbSearch(int toFind)//int& tlbArray[][],int& pageTable[][],int toFind)
 	{
 		for(int i=0;i<sizeof(PageTable)-1;i++)
 		{
-			if(PageTable[i][0] == toFind) //search through page table
+			if(PageTable[i][0]==toFind) //search through page table
 			{
 				found=0;
 			}
