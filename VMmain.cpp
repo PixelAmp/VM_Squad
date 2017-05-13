@@ -33,7 +33,7 @@ public:
 	int central(string); //heart of the function. This is where the mega loop is
 
     int tlbSearch(int); //Andrew's thing
-    void updateTLBVM(int, int, int);//
+    int updateTLBVM(int, int, int);//
 
 protected:
 	//nothing?
@@ -165,13 +165,11 @@ int VM::tlbSearch(int toFind)//int& tlbArray[][],int& pageTable[][],int toFind)
 	return found;
 }
 
-void VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pageTable[][],int page,int frame,int status)
-{
+int VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pageTable[][],int page,int frame,int status)
+{	
 	if(status==-1)
 	{
-		pageTable[pageTableIndex][0]=page;
-		pageTable[pageTableIndex][1]=frame;
-		pageTableIndex++;
+		pageTable[page]=frame;
 		tlbArray[tlbIndex][0]=page;
 		tlbArray[tlbIndex][1]=frame;
 		tlbArrayIndex++;
@@ -181,19 +179,17 @@ void VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pa
 		tlbArray[tlbIndex][0]=page;
 		tlbArray[tlbIndex][1]=frame;
 		tlbIndex++;
+		return pageTable[page];
 	}
 	else
 	{
 		printf("\nTLB HIT NO UPDATE\n");
+		return tlbArray[page][1];
 	}
 	if(tlbIndex==sizeof(tlbArray)-1)
 	{
 		tlbIndex=0;
-	}
-	if(pageTableIndex==sizeof(pageTable)-1)
-	{
-		pageTableIndex=0;
-	}
+}
 }
 
 
