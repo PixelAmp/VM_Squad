@@ -16,13 +16,13 @@ private:
 	int PageTable[PageTableSize];
 	int frameTable[frameSize];	//physical memory
 	*/
-	int TLBtable[16];
+	int TLBtable[16][2];
 	int PageTable[256];
 	int frameTable[256];	//physical memory
 	int pageFaultcount = 0;
 
 	int tlbIndex=0;
-    int pageTableIndex=0;
+    	int pageTableIndex=0;
 
 public:
 	VM(); //constructor
@@ -169,24 +169,24 @@ int VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pag
 {	
 	if(status==-1)
 	{
-		pageTable[page]=frame;
-		tlbArray[tlbIndex][0]=page;
-		tlbArray[tlbIndex][1]=frame;
-		tlbArrayIndex++;
+		PageTable[page]=frame;
+		TLBtable[tlbIndex][0]=page;
+		TLBtable[tlbIndex][1]=frame;
+		tlbIndex++;
 	}
 	else if(status==0)
 	{
-		tlbArray[tlbIndex][0]=page;
-		tlbArray[tlbIndex][1]=frame;
+		TLBtable[tlbIndex][0]=page;
+		TLBtable[tlbIndex][1]=frame;
 		tlbIndex++;
-		return pageTable[page];
+		return PageTable[page];
 	}
 	else
 	{
 		printf("\nTLB HIT NO UPDATE\n");
-		return tlbArray[page][1];
+		return TLBtable[page][1];
 	}
-	if(tlbIndex==sizeof(tlbArray)-1)
+	if(tlbIndex==sizeof(TLBtable)-1)
 	{
 		tlbIndex=0;
 }
