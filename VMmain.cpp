@@ -1,3 +1,11 @@
+/***************VMmain.cpp*******************/
+//CS 433 Final Project
+//Created by: Raul, Andrew, Aaron
+//Last Updated: 2017/05/13
+//Written in Vim and Codeblocks
+//Compiled with g++
+/********************************************/
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,11 +18,13 @@ private:
 	static const int TLBsize = 16;
 	static const int PageTableSize = 256;
 	static const int frameSize = 256;
+
 /*
 	int TLBtable[TLBsize];
 	int PageTable[PageTableSize];
 	int frameTable[frameSize];	//physical memory
-	*/
+*/
+
 	int TLBtable[16][2];
 	int PageTable[256];
 	int frameTable[256];	//physical memory
@@ -31,8 +41,8 @@ public:
 
 	int central(string); //heart of the function. This is where the mega loop is
 
-    int tlbSearch(int); //Andrew's thing
-    int updateTLBVM(int, int, int);//
+    	int tlbSearch(int); //Andrew's thing
+    	int updateTLBVM(int, int, int);//
 
 protected:
 	//nothing?
@@ -75,70 +85,64 @@ string VM::toBinary(int n) //turns passed integer into a 32 bit binary string
 int VM::central(string fileName)
 {
 	int page = 0, offset = 0; //holds page number and offset
-	string binary; //stores translated number in binary
-	int input; // input from file
-	ifstream address; 
+	string binary;
+	int input;	
+	ifstream address;
 	ofstream Out;
 
-    	address.open(fileName.data()); //opens input file
-	Out.open("VMresults.txt"); //opens output file
-	
-	Out << "Logical address" << "\t" << "Physical address" << "\n";
-	
-   	 if (address == NULL){ //checks to make sure file exists
+    	address.open(fileName.data()); //opens file
+	Out.open("VMresults.txt");
+
+	Out << "Logical address" << "\t" << "Physical Address" << "/n";
+
+
+   	if (address == NULL){ //checks to make sure file exists
      	   cout << "file does not exist" << endl;
-     	   return 1;}
+     	   return 1;
+	}
 
 
 	while(!data.eof())	//while there are addresses to read
 	{
-        	address >> input; //reads in a number from the file; reuse since we're throwing away this value anyway
-		Out >> input >> "\t"; //out[uts the currrently accessed 
-		
-		binary = toBinary(input); //makes input a 32 bit number
+  	      	address >> input; //reads in a number from the file; reuse since we're throwing away this value anyway
+		Out >> input >> "\t";	//outputs the currently accessed 		
+
+		binary = toBinary(page); //makes input a 32 bit number
 
 		page = toInt(binary.substr(16,8)); //makes 15-8 to an int for the page
 		offset = toInt(binary.substr(24,8)); // makes 7-0 to an int for the offset
 
 		//check TLB for page number
 		//tlbSearch(int& tlbArray[][],int& pageTable[][],int toFind)
-		bool searchResult = tlbSearch(page);
+		int searchResult = tlbSearch(page);
 
-		if(searchResult == true)	//hit
+		if(searchResult == 1)	//found in TLB, hit
 		{
+			int physAddress = /*equation here*/;
+
+			//write physical address to file
+			Out >> input  >> " " >> physAddress >> endl;
+		}
+		else if(searchResult == 0)	//found in page table, TLB miss
+		{
+			updateTLBVM(page, offset, searchResult);
+
 			//generate physical address
+
+			//write physical address to file
 		}
-		else	//page does not exist in TLB miss
+		else	//page fault
 		{
-		//check page table for page number
-			bool pageSearchResult = tlbSearch(page);
+			//store requested page in physical mem
 
-			if(pageSearchResult == true)	//page number is in page table
-			{
-					//use FIFO function to update tlb
+			//update page table and TLB
 
-					//generate physical address
-			}
-			else	//page number is not in page table
-			{
-				pageFaultcount++;	//page fault occured
+			//generate physical address
 
-				//transfer page to memory from disk
-
-				//check if page table is full
-				if(/*page table is not full*/)
-				{
-					//store in page table
-				}
-				else	//page table is full
-				{
-						//perform page replacement, LRU algorithm
-				}
-			}
+			//write physical address to file
 		}
-	
-		out >> "\n"; // new line for next input
 	}
+	
 	//closes stream files
 	Out.close();
 	address.close();
@@ -149,57 +153,54 @@ int VM::central(string fileName)
 int VM::tlbSearch(int toFind)//int& tlbArray[][],int& pageTable[][],int toFind)
 {
 	int found= -1;
-	for(int i=0;i<sizeof(tlbArray)-1;i++)
+	for(int i=0;i<sizeof(TLBtable)-1;i++)
 	{
-		if(tlbArray[i][0]==toFind)
+		if(TLBtable[i][0]==toFind) //search through TLB
 		{
 			found=1;
 		}
 	}
-	if(found==-1)
+	if(found==-1)	//TLB miss
 	{
-		for(int i=0;i<sizeof(pageTable)-1;i++)
+		for(int i=0;i<sizeof(PageTable)-1;i++)
 		{
-			if(pageTable[i][0]==toFind)
+			if(PageTable[i][0]==toFind) //search through page table
 			{
 				found=0;
 			}
 		}
 	}
-	if(found==-1)
+	if(found==-1)	//page fault occured
 	{
-		pageFaultCount++;
+		pageFaultcount++;
 	}
 	return found;
 }
 
 int VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pageTable[][],int page,int frame,int status)
 {	
-	if(status==-1)
+	if(status==-1)	//page fault
 	{
 		PageTable[page]=frame;
 		TLBtable[tlbIndex][0]=page;
 		TLBtable[tlbIndex][1]=frame;
 		tlbIndex++;
 	}
-	else if(status==0)
+	else if(status==0)	//TLB miss
 	{
 		TLBtable[tlbIndex][0]=page;
 		TLBtable[tlbIndex][1]=frame;
 		tlbIndex++;
 		return PageTable[page];
-	}
-	else
+	}	
+	else	//TLB hit
 	{
 		printf("\nTLB HIT NO UPDATE\n");
 		return TLBtable[page][1];
 	}
-	if(tlbIndex==sizeof(TLBtable)-1)
+	if(tlbIndex==sizeof(TLBtable)-1)	//reset FIFO order
 	{
 		tlbIndex=0;
 	}
 	return -1;
 }
-
-
-
