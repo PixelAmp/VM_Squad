@@ -140,7 +140,9 @@ int VM::central(string fileName)
 	
 		out >> "\n"; // new line for next input
 	}
-
+	//closes stream files
+	Out.close();
+	address.close();
 }
 
 
