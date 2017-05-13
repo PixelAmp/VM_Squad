@@ -104,7 +104,7 @@ int VM::central(string fileName)
 	while(!address.eof())	//while there are addresses to read
 	{
   	      	address >> input; //reads in a number from the file; reuse since we're throwing away this value anyway
-		Out >> input >> "\t";	//outputs the currently accessed 		
+		//Out >> input >> "\t";	//outputs the currently accessed 		
 
 		binary = toBinary(page); //makes input a 32 bit number
 
@@ -126,7 +126,7 @@ int VM::central(string fileName)
 			found = "not found";
 		}
 		
-		Out >> input >> "\t" >> offset >> "\t" << found << "\n";
+		Out << input << "\t" << offset << "\t" << found << "\n";
 	}
 	
 	//closes stream files
