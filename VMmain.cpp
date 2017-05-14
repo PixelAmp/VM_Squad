@@ -105,7 +105,7 @@ int VM::central(string fileName)
 	{
   	      	address >> input; //reads in a number from the file; reuse since we're throwing away this value anyway		
 
-		binary = toBinary(page); //makes input a 32 bit number
+		binary = toBinary(input); //makes input a 32 bit number
 
 		page = toInt(binary.substr(16,8)); //makes 15-8 to an int for the page
 		offset = toInt(binary.substr(24,8)); // makes 7-0 to an int for the offset
