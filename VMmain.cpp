@@ -183,7 +183,7 @@ int VM::updateTLBVM(int page, int frame, int status)//int& tlbArray[][],int& pag
 		printf("\nTLB HIT NO UPDATE\n");
 		return TLBtable[page][1];
 	}
-	if(tlbIndex==sizeof(TLBtable)-1)	//reset FIFO order
+	if(tlbIndex==(TLBsize-1))	//reset FIFO order
 	{
 		tlbIndex=0;
 	}
